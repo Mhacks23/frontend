@@ -23,8 +23,8 @@ function MyApp({ Component, pageProps }) {
         <DataState>
           <Layout>
             <Component {...pageProps} />
+            <ToastContainer />
           </Layout>
-          <ToastContainer />
         </DataState>
       </AuthState>
     </React.Fragment>
