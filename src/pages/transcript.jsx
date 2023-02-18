@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "../styles/Transcript.module.css";
 import axios from "axios";
+import dataContext from "@/hooks/DataContext/dataContext";
+import authContext from "@/hooks/AuthContext/authContext";
 
 const transcript = () => {
+  const { user } = useContext(authContext);
+  const { sendTranscripts } = useContext(dataContext);
+
   const [link, setLink] = useState("");
   const [subject, setSubject] = useState("");
   const [chapter, setChapter] = useState("");
@@ -11,18 +16,14 @@ const transcript = () => {
 
   const handleSubmit = () => {
     setYid(link.split("=")[1]);
-    let body = {
-      video_url: "https://www.youtube.com/watch?v=KYxrBuz1vMY",
+    let formData = {
+      user_id: user ? user.user_id : "test_user_1",
+      video_url: link,
+      chapter_name: chapter,
+      subject_name: subject,
     };
 
-    axios
-      .post("http://6828-107-178-220-171.ngrok.io/create_notes/", body)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    sendTranscripts(formData);
   };
 
   return (
@@ -30,7 +31,10 @@ const transcript = () => {
       <div className={styles.subhome}>
         <input onChange={(e) => setLink(e.target.value)} type="text" placeholder="Please enter YouTube video link" />
         <div className={styles.option}>
-          <select onChange={(e) => setSubject(e.target.value)} value={subject} name="subject" id="subjecr">
+          <select onChange={(e) => setSubject(e.target.value)} value={subject} name="subject" id="subject">
+            <option value="" disabled>
+              Select Subject
+            </option>
             {initialSubs.map((sub) => {
               return <option value={sub}>{sub}</option>;
             })}
