@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import styles from "../../styles/Footer.module.css";
 
 function Footer() {
-    return (
-        <div>Footer</div>
-    )
+  return (
+    <div className={styles.footer}>
+      <p>Made with ❤️ Team 008- TechBytes</p>
+    </div>
+  );
 }
 
-export default Footer
+export default Footer;
