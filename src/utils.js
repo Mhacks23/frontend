@@ -2,9 +2,7 @@ import Axios from "axios";
 import { toast } from "react-toastify";
 
 export function getUserAvatar(name, size = 128) {
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name
-  )}&background=random&size=${size}`;
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=${size}`;
 }
 
 export function sentenceCase(str) {
@@ -33,8 +31,14 @@ export const alertBox = (message = "Something went wrong", type = "error") => {
   toast(message, { type: type });
 };
 
-
 export const getContest = async () => {
   const data = await Axios.get("https://kontests.net/api/v1/all");
+  return data;
+};
+
+export const getNews = async (category) => {
+  const cat = category ? category : "";
+  const key = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+  const data = await Axios.get(`https://newsapi.org/v2/top-headlines?country=in&category=${cat}&apiKey=${key}`);
   return data;
 };
