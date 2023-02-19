@@ -1,8 +1,12 @@
 import React from "react";
 import styles from "../../styles/Transcript.module.css";
 import Chunks from "@/components/transcript/Chunks";
+import { useRouter } from "next/router";
 
 const Details = () => {
+  const router = useRouter();
+  const data = router.query;
+
   return (
     <div className={styles.details}>
       <div className={styles.individual}>

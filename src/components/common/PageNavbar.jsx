@@ -1,4 +1,4 @@
-import authContext from "@/hooks/AuthContext/authContext";
+import authContext from "../../hooks/AuthContext/authContext";
 import Link from "next/link";
 import React, { useContext } from "react";
 import styles from "../../styles/PageNavbar.module.css";
