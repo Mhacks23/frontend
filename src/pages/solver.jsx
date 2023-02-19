@@ -48,19 +48,41 @@ const solver = () => {
               <progress className="form-control" value={progress} max="100">
                 {progress}%{" "}
               </progress>{" "}
-              <p className="text-center py-0 my-0 white_text">Converting:- {progress} %</p>
+              <p className="text-center py-0 my-0 white_text">
+                Converting:- {progress} %
+              </p>
             </>
           )}
           {!isLoading && !text && (
             <>
-              <input type="file" id="file" onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))} className="form-control mt-5 mb-2" />
-              <input type="button" id="submit" onClick={handleSubmit} className="btn btn-primary mt-5" value="Solve" />
+              <input
+                type="file"
+                id="file"
+                onChange={(e) =>
+                  setImage(URL.createObjectURL(e.target.files[0]))
+                }
+                className="form-control mt-5 mb-2"
+              />
+              <input
+                type="button"
+                id="submit"
+                onClick={handleSubmit}
+                className="btn btn-primary mt-5"
+                value="Solve"
+              />
             </>
           )}
           {!isLoading && text && (
             <>
-              <h6 className="text-center py-3 white_text">Please confirm the equation</h6>
-              <textarea className="form-control w-100 mt-5" rows="5" value={text} onChange={(e) => setText(e.target.value)}></textarea>
+              <h6 className="text-center py-3 white_text">
+                Please confirm the equation
+              </h6>
+              <textarea
+                className="form-control w-100 mt-5"
+                rows="5"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              ></textarea>
               {/* <Buttons equation={text}/>     */}
               <div className={styles.solver_div}>
                 <Link

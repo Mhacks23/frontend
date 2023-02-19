@@ -57,11 +57,16 @@ const Solve = (props) => {
 
   const [solution, setSolution] = useState();
   const [waiting, setWaiting] = useState(0);
-  const url = "https://api.wolframalpha.com/v2/query?input=" + eq + "&output=json&appid=77QY3U-QR78VRQUR7";
+  const url =
+    "https://api.wolframalpha.com/v2/query?input=" +
+    eq +
+    "&output=json&appid=77QY3U-QR78VRQUR7";
   console.log(url);
   setTimeout(() => setWaiting(1), 5000);
   useEffect(() => {
-    axios.get("https://cors-anywhere.herokuapp.com/" + url).then((response) => setSolution(response));
+    axios
+      .get("https://cors-anywhere.herokuapp.com/" + url)
+      .then((response) => setSolution(response));
   }, []);
 
   return waiting ? (
@@ -71,16 +76,28 @@ const Solve = (props) => {
         refreshPage()
       ) : (
         <div className="solution home">
-          {console.log("Status" + solution.data.queryresult.success + typeof solution.data.queryresult.success)}
+          {console.log(
+            "Status" +
+              solution.data.queryresult.success +
+              typeof solution.data.queryresult.success
+          )}
           {solution.data.queryresult.success == false ? (
             <Error />
           ) : (
             <div className="box">
-              {arr.push(solution.data.queryresult.pods[solution.data.queryresult.pods.length - 3].subpods)}
+              {arr.push(
+                solution.data.queryresult.pods[
+                  solution.data.queryresult.pods.length - 3
+                ].subpods
+              )}
               <h1>Solution: </h1>
               <h6>Entered equation: {reqEquation}</h6>
               <br />
-              {console.log(solution.data.queryresult.pods[solution.data.queryresult.pods.length - 3].subpods[0].img.alt)}
+              {console.log(
+                solution.data.queryresult.pods[
+                  solution.data.queryresult.pods.length - 3
+                ].subpods[0].img.alt
+              )}
               {console.log(arr)}
               <h6>Answer : </h6>
               {/* <p>{solution.data.queryresult.pods[4].subpods[0].img.alt}</p> */}

@@ -22,7 +22,12 @@ const Buttons = (props) => {
           solveEq();
         }}
       >
-        <input id="solve" type="button" className="btn btn-success mt-5 ms-3" value="Solve" />
+        <input
+          id="solve"
+          type="button"
+          className="btn btn-success mt-5 ms-3"
+          value="Solve"
+        />
       </div>
 
       {/* <div onClick={()=>{visEq()}}>

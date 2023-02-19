@@ -13,6 +13,7 @@
 .subcat{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .subcat a{
