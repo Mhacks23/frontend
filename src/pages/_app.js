@@ -1,6 +1,6 @@
 import Layout from "../components/common/Layout";
 import AuthState from "@/hooks/AuthContext/AuthState";
-import DataState from "@/hooks/DataContext/DataState";
+import DataState from "@/hooks/DataContext/DataState";   
 import "@/styles/globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
