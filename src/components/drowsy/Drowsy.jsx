@@ -1,6 +1,7 @@
 import { faWindowMinimize } from "@fortawesome/free-solid-svg-icons";
 import * as faceapi from "face-api.js";
 import React from "react";
+import useSound from "use-sound";
 
 import { useSpeechSynthesis } from "react-speech-kit";
 
@@ -16,7 +17,8 @@ function Drowsy() {
   const videoHeight = 480;
   const videoWidth = 640;
   const canvasRef = React.useRef();
-  const [play] = useSound('/sounds/boop.mp3');
+
+  const [play] = useSound("/sounds/boop.mp3");
 
   React.useEffect(() => {
     const loadModels = async () => {
@@ -49,7 +51,9 @@ function Drowsy() {
   const handleVideoOnPlay = () => {
     let interval_id = setInterval(async () => {
       if (canvasRef && canvasRef.current) {
-        canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(videoRef.current);
+        canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
+          videoRef.current
+        );
         const displaySize = {
           width: videoWidth,
           height: videoHeight,
@@ -57,9 +61,18 @@ function Drowsy() {
 
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
-        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
+        const detections = await faceapi
+          .detectAllFaces(
+            videoRef.current,
+            new faceapi.TinyFaceDetectorOptions()
+          )
+          .withFaceLandmarks()
+          .withFaceExpressions();
 
-        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+        const resizedDetections = faceapi.resizeResults(
+          detections,
+          displaySize
+        );
 
         console.log(resizedDetections);
 
@@ -67,14 +80,27 @@ function Drowsy() {
           tick = tick + 1;
           if (tick > 6) {
             tick = 0;
-            speak({ text: "Please focus" });
+            alertBox("Please pay attention");
           }
         }
 
-        canvasRef && canvasRef.current && canvasRef.current.getContext("2d").clearRect(0, 0, videoWidth, videoHeight);
-        canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-        canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
-        canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
+        canvasRef &&
+          canvasRef.current &&
+          canvasRef.current
+            .getContext("2d")
+            .clearRect(0, 0, videoWidth, videoHeight);
+        canvasRef &&
+          canvasRef.current &&
+          faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+        canvasRef &&
+          canvasRef.current &&
+          faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
+        canvasRef &&
+          canvasRef.current &&
+          faceapi.draw.drawFaceExpressions(
+            canvasRef.current,
+            resizedDetections
+          );
       }
     }, 100);
     setIntervalId(interval_id);
@@ -93,14 +119,30 @@ function Drowsy() {
         {captureVideo && modelsLoaded ? (
           <button
             onClick={closeWebcam}
-            style={{ cursor: "pointer", backgroundColor: "green", color: "white", padding: "15px", fontSize: "25px", border: "none", borderRadius: "10px" }}
+            style={{
+              cursor: "pointer",
+              backgroundColor: "green",
+              color: "white",
+              padding: "15px",
+              fontSize: "25px",
+              border: "none",
+              borderRadius: "10px",
+            }}
           >
             Close Webcam
           </button>
         ) : (
           <button
             onClick={startVideo}
-            style={{ cursor: "pointer", backgroundColor: "green", color: "white", padding: "15px", fontSize: "25px", border: "none", borderRadius: "10px" }}
+            style={{
+              cursor: "pointer",
+              backgroundColor: "green",
+              color: "white",
+              padding: "15px",
+              fontSize: "25px",
+              border: "none",
+              borderRadius: "10px",
+            }}
           >
             Open Webcam
           </button>
@@ -109,8 +151,20 @@ function Drowsy() {
       {captureVideo ? (
         modelsLoaded ? (
           <div>
-            <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
-              <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: "10px" }} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "10px",
+              }}
+            >
+              <video
+                ref={videoRef}
+                height={videoHeight}
+                width={videoWidth}
+                onPlay={handleVideoOnPlay}
+                style={{ borderRadius: "10px" }}
+              />
               <canvas ref={canvasRef} style={{ position: "absolute" }} />
             </div>
           </div>
