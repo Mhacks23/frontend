@@ -1,6 +1,7 @@
 import { faWindowMinimize } from "@fortawesome/free-solid-svg-icons";
 import * as faceapi from "face-api.js";
-import React from "react";
+import React, { useState, useRef } from "react";
+import song from "sounds/audio.mp3";
 import useSound from "use-sound";
 
 import { useSpeechSynthesis } from "react-speech-kit";
@@ -9,6 +10,24 @@ function Drowsy() {
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
   const [intervalId, setIntervalId] = React.useState(null);
+  // const [audio, setAudio]=useState(new Audio(song))
+  const audioRef = useRef();
+
+  const play = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    } else {
+      // Throw error
+    }
+  };
+
+  const pause = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    } else {
+      // Throw error
+    }
+  };
 
   const { speak } = useSpeechSynthesis();
   var tick = 0;
@@ -18,7 +37,7 @@ function Drowsy() {
   const videoWidth = 640;
   const canvasRef = React.useRef();
 
-  const [play] = useSound("/sounds/boop.mp3");
+  // const [play] = useSound("/sounds/boop.mp3");
 
   React.useEffect(() => {
     const loadModels = async () => {
@@ -51,9 +70,7 @@ function Drowsy() {
   const handleVideoOnPlay = () => {
     let interval_id = setInterval(async () => {
       if (canvasRef && canvasRef.current) {
-        canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
-          videoRef.current
-        );
+        canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(videoRef.current);
         const displaySize = {
           width: videoWidth,
           height: videoHeight,
@@ -61,18 +78,9 @@ function Drowsy() {
 
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
-        const detections = await faceapi
-          .detectAllFaces(
-            videoRef.current,
-            new faceapi.TinyFaceDetectorOptions()
-          )
-          .withFaceLandmarks()
-          .withFaceExpressions();
+        const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
 
-        const resizedDetections = faceapi.resizeResults(
-          detections,
-          displaySize
-        );
+        const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
         console.log(resizedDetections);
 
@@ -80,27 +88,19 @@ function Drowsy() {
           tick = tick + 1;
           if (tick > 6) {
             tick = 0;
+            play();
+
+            setTimeout(() => {
+              pause();
+            }, 2000);
             alertBox("Please pay attention");
           }
         }
 
-        canvasRef &&
-          canvasRef.current &&
-          canvasRef.current
-            .getContext("2d")
-            .clearRect(0, 0, videoWidth, videoHeight);
-        canvasRef &&
-          canvasRef.current &&
-          faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-        canvasRef &&
-          canvasRef.current &&
-          faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
-        canvasRef &&
-          canvasRef.current &&
-          faceapi.draw.drawFaceExpressions(
-            canvasRef.current,
-            resizedDetections
-          );
+        canvasRef && canvasRef.current && canvasRef.current.getContext("2d").clearRect(0, 0, videoWidth, videoHeight);
+        canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+        canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
+        canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
       }
     }, 100);
     setIntervalId(interval_id);
@@ -115,11 +115,13 @@ function Drowsy() {
 
   return (
     <div>
+      <audio ref={audioRef} src="/sounds/audio.mp3" />
       <div style={{ textAlign: "center", padding: "10px" }}>
         {captureVideo && modelsLoaded ? (
           <button
             onClick={closeWebcam}
             style={{
+              width: "300px",
               cursor: "pointer",
               backgroundColor: "green",
               color: "white",
@@ -127,25 +129,31 @@ function Drowsy() {
               fontSize: "25px",
               border: "none",
               borderRadius: "10px",
+              marginBottom: "10px",
             }}
           >
             Close Webcam
           </button>
         ) : (
-          <button
-            onClick={startVideo}
-            style={{
-              cursor: "pointer",
-              backgroundColor: "green",
-              color: "white",
-              padding: "15px",
-              fontSize: "25px",
-              border: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Open Webcam
-          </button>
+          <>
+            <button
+              onClick={startVideo}
+              style={{
+                width: "300px",
+                cursor: "pointer",
+                backgroundColor: "green",
+                color: "white",
+                padding: "15px",
+                fontSize: "25px",
+                border: "none",
+                borderRadius: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              Enable Webcam Monitoring
+            </button>
+            <div>{/* <button onClick={play}>Play</button> */}</div>
+          </>
         )}
       </div>
       {captureVideo ? (
@@ -158,13 +166,7 @@ function Drowsy() {
                 padding: "10px",
               }}
             >
-              <video
-                ref={videoRef}
-                height={videoHeight}
-                width={videoWidth}
-                onPlay={handleVideoOnPlay}
-                style={{ borderRadius: "10px" }}
-              />
+              <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: "10px" }} />
               <canvas ref={canvasRef} style={{ position: "absolute" }} />
             </div>
           </div>
