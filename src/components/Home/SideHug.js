@@ -9,7 +9,9 @@ const SideHug = () => {
       </div>
       <div className={styles.side_content}>
         <h1 className={styles.title}>StudyPat</h1>
-        <p className={styles.text}>One place for all your productivity</p>
+        <p className={styles.text}>
+          A One-Stop Location for All Your Productivity Needs
+        </p>
       </div>
     </div>
   );
