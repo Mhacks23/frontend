@@ -8,7 +8,7 @@ const SideHug = () => {
         <img src="/assets/images/sidehug_image.jpg" alt="" width={500} />
       </div>
       <div className={styles.side_content}>
-        <h1 className={styles.title}>StudyPat</h1>
+        <h1 className={styles.title}>StudyPal</h1>
         <p className={styles.text}>
           A One-Stop Location for All Your Productivity Needs
         </p>

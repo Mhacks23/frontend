@@ -1,5 +1,5 @@
 import authContext from "../../hooks/AuthContext/authContext";
-import { getUserAvatar } from "@/utils";
+import { getUserAvatar } from "src/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
@@ -14,7 +14,7 @@ const PageNavbar = () => {
     <div className={styles.navbar}>
       <div className={styles.subnav}>
         <Link href="/" passHref>
-          <h2>StudyPat</h2>
+          <h2>StudyPal</h2>
         </Link>
         <div className={styles.login}>
           {!user && (
