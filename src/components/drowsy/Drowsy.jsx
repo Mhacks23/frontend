@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import { faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
-import * as faceapi from 'face-api.js';
-import React from 'react';
-import useSound from 'use-sound';
-=======
 import { faWindowMinimize } from "@fortawesome/free-solid-svg-icons";
 import * as faceapi from "face-api.js";
 import React from "react";
->>>>>>> limark
 
 import { useSpeechSynthesis } from "react-speech-kit";
 
@@ -96,28 +89,6 @@ function Drowsy() {
 
   return (
     <div>
-<<<<<<< HEAD
-      <div style={{ textAlign: 'center', padding: '10px' }}>
-        {
-          captureVideo && modelsLoaded ?
-            <button onClick={closeWebcam} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
-              Close Webcam
-            </button>
-            :
-            <button onClick={startVideo} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
-              Enable Webcam Monitoring
-            </button>
-        }
-      </div>
-      {
-        captureVideo ?
-          modelsLoaded ?
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-                <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: '10px',display: 'none'}} />
-                <canvas ref={canvasRef} style={{ position: 'absolute',display: 'none' }} />
-              </div>
-=======
       <div style={{ textAlign: "center", padding: "10px" }}>
         {captureVideo && modelsLoaded ? (
           <button
@@ -141,7 +112,6 @@ function Drowsy() {
             <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
               <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: "10px" }} />
               <canvas ref={canvasRef} style={{ position: "absolute" }} />
->>>>>>> limark
             </div>
           </div>
         ) : (
