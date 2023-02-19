@@ -1,11 +1,15 @@
-import { faWindowMinimize } from '@fortawesome/free-solid-svg-icons';
-import * as faceapi from 'face-api.js';
-import React from 'react';
+import { faWindowMinimize } from "@fortawesome/free-solid-svg-icons";
+import * as faceapi from "face-api.js";
+import React from "react";
+
+import { useSpeechSynthesis } from "react-speech-kit";
 
 function Drowsy() {
-
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
+  const [intervalId, setIntervalId] = React.useState(null);
+
+  const { speak } = useSpeechSynthesis();
   var tick = 0;
 
   const videoRef = React.useRef();
@@ -15,7 +19,7 @@ function Drowsy() {
 
   React.useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = '/models';
+      const MODEL_URL = "/models";
 
       Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
@@ -23,7 +27,7 @@ function Drowsy() {
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
         faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
       ]).then(setModelsLoaded(true));
-    }
+    };
     loadModels();
   }, []);
 
@@ -31,24 +35,24 @@ function Drowsy() {
     setCaptureVideo(true);
     navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
-      .then(stream => {
+      .then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
         video.play();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("error:", err);
       });
-  }
+  };
 
   const handleVideoOnPlay = () => {
-    setInterval(async () => {
+    let interval_id = setInterval(async () => {
       if (canvasRef && canvasRef.current) {
         canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(videoRef.current);
         const displaySize = {
           width: videoWidth,
-          height: videoHeight
-        }
+          height: videoHeight,
+        };
 
         faceapi.matchDimensions(canvasRef.current, displaySize);
 
@@ -56,62 +60,65 @@ function Drowsy() {
 
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-        console.log(resizedDetections)
+        console.log(resizedDetections);
 
-        if(resizedDetections.length === 0)
-        {
-            tick = tick + 1;
-            if(tick > 6)
-            {
-                tick = 0;
-                window.alert("Pay attention");
-            }
-
+        if (resizedDetections.length === 0) {
+          tick = tick + 1;
+          if (tick > 6) {
+            tick = 0;
+            speak({ text: "Please focus" });
+          }
         }
 
-        canvasRef && canvasRef.current && canvasRef.current.getContext('2d').clearRect(0, 0, videoWidth, videoHeight);
+        canvasRef && canvasRef.current && canvasRef.current.getContext("2d").clearRect(0, 0, videoWidth, videoHeight);
         canvasRef && canvasRef.current && faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
         canvasRef && canvasRef.current && faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
       }
-    }, 100)
-  }
+    }, 100);
+    setIntervalId(interval_id);
+  };
 
   const closeWebcam = () => {
+    clearInterval(intervalId);
     videoRef.current.pause();
     videoRef.current.srcObject.getTracks()[0].stop();
     setCaptureVideo(false);
-  }
+  };
 
   return (
     <div>
-      <div style={{ textAlign: 'center', padding: '10px' }}>
-        {
-          captureVideo && modelsLoaded ?
-            <button onClick={closeWebcam} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
-              Close Webcam
-            </button>
-            :
-            <button onClick={startVideo} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
-              Open Webcam
-            </button>
-        }
+      <div style={{ textAlign: "center", padding: "10px" }}>
+        {captureVideo && modelsLoaded ? (
+          <button
+            onClick={closeWebcam}
+            style={{ cursor: "pointer", backgroundColor: "green", color: "white", padding: "15px", fontSize: "25px", border: "none", borderRadius: "10px" }}
+          >
+            Close Webcam
+          </button>
+        ) : (
+          <button
+            onClick={startVideo}
+            style={{ cursor: "pointer", backgroundColor: "green", color: "white", padding: "15px", fontSize: "25px", border: "none", borderRadius: "10px" }}
+          >
+            Open Webcam
+          </button>
+        )}
       </div>
-      {
-        captureVideo ?
-          modelsLoaded ?
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-                <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: '10px' }} />
-                <canvas ref={canvasRef} style={{ position: 'absolute' }} />
-              </div>
+      {captureVideo ? (
+        modelsLoaded ? (
+          <div>
+            <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
+              <video ref={videoRef} height={videoHeight} width={videoWidth} onPlay={handleVideoOnPlay} style={{ borderRadius: "10px" }} />
+              <canvas ref={canvasRef} style={{ position: "absolute" }} />
             </div>
-            :
-            <div>loading...</div>
-          :
-          <>
-          </>
-      }
+          </div>
+        ) : (
+          <div>loading...</div>
+        )
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

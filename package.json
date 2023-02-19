@@ -16,6 +16,7 @@
     "react-toastify": "^9.1.1",
     "universal-cookie": "^4.0.4",
     "react-full-screen": "^1.1.1",
+    "react-speech-kit": "^3.0.1",
     "face-api.js": "^0.22.2",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
