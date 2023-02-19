@@ -19,6 +19,9 @@ const Category = () => {
         <Link href="/solver">
           <div className={`${styles.cat} ${styles.red}`}>Equation solver</div>
         </Link>
+        <Link href="/contests">
+          <div className={`${styles.cat} ${styles.red}`}>Upcoming Contests</div>
+        </Link>
       </div>
     </div>
   );
